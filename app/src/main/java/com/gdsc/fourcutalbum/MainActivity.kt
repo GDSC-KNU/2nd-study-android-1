@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 //        fourCutsViewModel = ViewModelProvider(this,factory)[FourCutsViewModel::class.java]
 
         // Room db test
-        var intent : Intent = Intent(MainActivity@this, TestActivity::class.java)
+        var intent : Intent = Intent(MainActivity@this, EditActivity::class.java)
         startActivity(intent)
 
     }
