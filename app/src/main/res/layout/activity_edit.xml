@@ -6,4 +6,82 @@
     android:layout_height="match_parent"
     tools:context=".EditActivity">
 
+    <Button
+        android:id="@+id/editSaveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="저장"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/editImageView"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editSaveButton" />
+
+    <TextView
+        android:id="@+id/editFriendDes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="친구"
+        app:layout_constraintTop_toBottomOf="@id/editImageView" />
+
+    <EditText
+        android:id="@+id/editComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/editCommentDes" />
+
+
+    <LinearLayout
+        android:id="@+id/editLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/editFriendDes">
+
+        <HorizontalScrollView
+            android:layout_weight="10"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/editFriendGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </HorizontalScrollView>
+        <Button
+            android:id="@+id/editPlusBtn"
+            android:layout_weight="1"
+            android:layout_gravity="end"
+            android:layout_width="40dp"
+            android:layout_height="40dp"/>
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/editLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/editLocationDes" />
+
+    <TextView
+        android:id="@+id/editCommentDes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="코멘트"
+        app:layout_constraintTop_toBottomOf="@id/editLocation" />
+
+    <TextView
+        android:id="@+id/editLocationDes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="위치"
+        app:layout_constraintTop_toBottomOf="@id/editLayout" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
