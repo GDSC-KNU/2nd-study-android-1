@@ -3,12 +3,14 @@ package com.gdsc.fourcutalbum
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
+import androidx.appcompat.app.AppCompatActivity
+import com.gdsc.fourcutalbum.databinding.ActivityMainBinding
 import android.util.Log
 import android.widget.Button
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,9 +19,7 @@ import com.gdsc.fourcutalbum.adapter.MainSampleAdapter
 import com.gdsc.fourcutalbum.data.db.FourCutsDatabase
 import com.gdsc.fourcutalbum.data.model.FourCuts
 import com.gdsc.fourcutalbum.data.repository.FourCutsRepositoryImpl
-import com.gdsc.fourcutalbum.databinding.ActivityMainBinding
 import com.gdsc.fourcutalbum.viewmodel.FourCutsViewModel
-import com.gdsc.fourcutalbum.viewmodel.FourCutsViewModelProviderFactory
 import com.gdsc.fourcutalbum.viewmodel.MainViewModel
 import com.gdsc.fourcutalbum.viewmodel.MainViewModelProviderFactory
 import kotlinx.coroutines.flow.SharingStarted
@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
+    lateinit var fourCutsViewModel: FourCutsViewModel
     lateinit var mainViewModel: MainViewModel
     var dataList : ArrayList<FourCuts> = arrayListOf()
     private var mainAdapter: MainSampleAdapter? = null
