@@ -45,6 +45,9 @@ class MainActivity : AppCompatActivity() {
         setInit()
         setDatabase()
 
+        // Room db test
+//        var intent : Intent = Intent(MainActivity@this, TestActivity::class.java)
+//        startActivity(intent)
 
     }
 
@@ -61,6 +64,7 @@ class MainActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED){
                 mainViewModel.getFourCuts.collectLatest {
                     Log.d("room db get log", it.toString())
+                    setRecyclerView(it)
 
                 }
             }
@@ -74,10 +78,13 @@ class MainActivity : AppCompatActivity() {
         mainAdapter?.let {
             it.setListInit(data)
         }
-//        binding.rvMain.apply {
-//            setHasFixedSize(true)
-//            layoutManager = StaggeredGridLayoutManager(applicationContext, )
-//            adapter = mainAdapter
-//        }
+
+        binding.rvMain.apply {
+            setHasFixedSize(true)
+            layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+            adapter = mainAdapter
+        }
+
+        mainAdapter!!.notifyDataSetChanged()
     }
 }
