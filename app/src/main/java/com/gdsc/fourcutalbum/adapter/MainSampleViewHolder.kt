@@ -16,7 +16,6 @@ class MainSampleViewHolder(private var binding: ListItemMainBinding ) : Recycler
                 if(it.equals("")){
                     Glide.with(binding.root.context).load(R.drawable.ic_baseline_broken_image_24)
                         .into(binding.ivItem)
-                    Log.d("TEST","TEST")
                 }else{
                     Glide.with(binding.root.context).load(it)
                         .override(SIZE_ORIGINAL)

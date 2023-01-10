@@ -31,7 +31,7 @@
             android:id="@+id/rv_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="5dp"
+            android:layout_margin="10dp"
             app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
             app:spanCount="2"
             tools:listitem="@layout/list_item_main" />
