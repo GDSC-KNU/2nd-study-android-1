@@ -11,4 +11,6 @@ interface FourCutsRepository {
     suspend fun deleteFourCuts(fourCuts: FourCuts)
 
     fun getFourCuts(): Flow<List<FourCuts>>
+
+    fun searchFourCuts(search: String) : Flow<List<FourCuts>>
 }

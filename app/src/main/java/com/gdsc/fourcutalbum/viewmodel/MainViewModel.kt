@@ -15,6 +15,8 @@ class MainViewModel(
     private val fourCutsRepository: FourCutsRepository,
 ) : ViewModel(){
 
+    val query: String = "%"+"동성로"+"%" // 가운데 검색내용
+
     // Room
     fun saveFourCuts(fourCuts: FourCuts) = viewModelScope.launch(Dispatchers.IO){
         fourCutsRepository.insertFourCuts(fourCuts)
@@ -27,4 +29,8 @@ class MainViewModel(
     // TestActivity의 lifecycle과 동기화
     val getFourCuts: StateFlow<List<FourCuts>> = fourCutsRepository.getFourCuts()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
+
+    val searchFourCuts: StateFlow<List<FourCuts>> = fourCutsRepository.searchFourCuts(query)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
+
 }

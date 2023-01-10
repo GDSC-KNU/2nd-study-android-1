@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class FourCuts(
     val title: String?,
-    val photo: Uri?,
+    val photo: Uri,
     val friends: List<String>?,
     val place: String?,
     val comment: String?

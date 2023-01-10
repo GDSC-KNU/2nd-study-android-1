@@ -63,10 +63,15 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch{
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                mainViewModel.getFourCuts.collectLatest {
+                // get all
+//                mainViewModel.getFourCuts.collectLatest {
+//                    Log.d("room db get log", it.toString())
+//                    setRecyclerView(it)
+//                }
+                // if search
+                mainViewModel.searchFourCuts.collectLatest {
                     Log.d("room db get log", it.toString())
                     setRecyclerView(it)
-
                 }
             }
         }

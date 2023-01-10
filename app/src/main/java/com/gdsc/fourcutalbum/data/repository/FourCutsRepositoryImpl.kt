@@ -19,5 +19,9 @@ class FourCutsRepositoryImpl(
         return db.fourCutsDao().getFourCuts()
     }
 
+    override fun searchFourCuts(search: String): Flow<List<FourCuts>> {
+        return db.fourCutsDao().searchFourCuts(search)
+    }
+
 
 }

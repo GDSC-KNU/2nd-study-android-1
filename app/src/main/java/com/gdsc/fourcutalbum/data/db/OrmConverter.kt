@@ -11,7 +11,7 @@ class OrmConverter {
     fun toList(value: String) = Gson().fromJson(value, Array<String>::class.java).toList()
 
     @TypeConverter
-    fun fromUri(value: Uri?) = value.toString()
+    fun fromUri(value: Uri) = value.toString()
     @TypeConverter
     fun toUri(value: String) = Uri.parse(value)
 }
