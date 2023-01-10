@@ -1,19 +1,21 @@
 package com.gdsc.fourcutalbum
 
-import android.content.ContentValues
-import android.content.Intent
+
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.gdsc.fourcutalbum.data.db.FourCutsDatabase
 import com.gdsc.fourcutalbum.data.model.FourCuts
 import com.gdsc.fourcutalbum.data.repository.FourCutsRepositoryImpl
 import com.gdsc.fourcutalbum.viewmodel.FourCutsViewModel
 import com.gdsc.fourcutalbum.viewmodel.FourCutsViewModelProviderFactory
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
@@ -37,6 +39,20 @@ class TestActivity : AppCompatActivity() {
         btn.setOnClickListener {
             fourCutsViewModel.saveFourCuts(fourCuts)
             Log.d("database: ", "Insert Data")
+        }
+
+        // 쿼리결과 표시
+//        lifecycleScope.launch{
+//            fourCutsViewModel.getFourCuts.collectLatest { // Flow의 데이터 구독
+//                fourCutsAdapter.submitList(it)
+//            }
+//        }
+        lifecycleScope.launch{
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                fourCutsViewModel.getFourCuts.collectLatest {
+                    Log.d("room db get log", it.toString())
+                }
+            }
         }
 
 
