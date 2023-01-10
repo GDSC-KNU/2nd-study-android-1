@@ -8,8 +8,6 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.gdsc.fourcutalbum.data.db.FourCutsDatabase
 import com.gdsc.fourcutalbum.data.model.FourCuts
 import com.gdsc.fourcutalbum.data.repository.FourCutsRepositoryImpl
@@ -47,13 +45,13 @@ class TestActivity : AppCompatActivity() {
 //                fourCutsAdapter.submitList(it)
 //            }
 //        }
-        lifecycleScope.launch{
-            repeatOnLifecycle(Lifecycle.State.STARTED){
-                fourCutsViewModel.getFourCuts.collectLatest {
-                    Log.d("room db get log", it.toString())
-                }
-            }
-        }
+//        lifecycleScope.launch{
+//            repeatOnLifecycle(Lifecycle.State.STARTED){
+//                fourCutsViewModel.getFourCuts.collectLatest {
+//                    Log.d("room db get log", it.toString())
+//                }
+//            }
+//        }
 
 
     }
