@@ -45,9 +45,6 @@ class MainActivity : AppCompatActivity() {
         setInit()
         setDatabase()
 
-        // Room db test
-//        var intent : Intent = Intent(MainActivity@this, TestActivity::class.java)
-//        startActivity(intent)
 
     }
 
@@ -77,7 +74,6 @@ class MainActivity : AppCompatActivity() {
         mainAdapter?.let {
             it.setListInit(data)
         }
-
 //        binding.rvMain.apply {
 //            setHasFixedSize(true)
 //            layoutManager = StaggeredGridLayoutManager(applicationContext, )
