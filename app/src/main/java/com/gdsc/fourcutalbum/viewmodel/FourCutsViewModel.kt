@@ -24,6 +24,10 @@ class FourCutsViewModel(
         fourCutsRepository.deleteFourCuts(fourCuts)
     }
 
+    fun updateFourCuts(fourCuts: FourCuts) = viewModelScope.launch(Dispatchers.IO){
+        fourCutsRepository.updateFourCuts(fourCuts)
+    }
+
     // val getFourCuts: Flow<List<FourCuts>> = fourCutsRepository.getFourCuts()
     // TestActivity의 lifecycle과 동기화
     val getFourCuts: StateFlow<List<FourCuts>> = fourCutsRepository.getFourCuts()

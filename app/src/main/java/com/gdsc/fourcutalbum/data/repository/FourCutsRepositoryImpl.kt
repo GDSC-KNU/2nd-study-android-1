@@ -15,6 +15,10 @@ class FourCutsRepositoryImpl(
         db.fourCutsDao().deleteFourCuts(fourCuts)
     }
 
+    override suspend fun updateFourCuts(fourCuts: FourCuts) {
+        db.fourCutsDao().updateFourCuts(fourCuts)
+    }
+
     override fun getFourCuts(): Flow<List<FourCuts>> {
         return db.fourCutsDao().getFourCuts()
     }
