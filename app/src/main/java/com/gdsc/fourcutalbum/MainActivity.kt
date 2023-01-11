@@ -126,7 +126,6 @@ class MainActivity : AppCompatActivity() {
             setHasFixedSize(true)
             layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
             adapter = mainAdapter
-            adapter?.notifyDataSetChanged()
         }
 
         mainAdapter!!.notifyDataSetChanged()

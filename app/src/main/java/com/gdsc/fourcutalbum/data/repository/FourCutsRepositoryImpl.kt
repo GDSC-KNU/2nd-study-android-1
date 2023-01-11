@@ -23,6 +23,10 @@ class FourCutsRepositoryImpl(
         return db.fourCutsDao().getFourCuts()
     }
 
+    override fun getFourCutsWithId(id: Int): Flow<FourCuts> {
+        return db.fourCutsDao().getFourCutsWithId(id)
+    }
+
     override fun searchFourCuts(search: String): Flow<List<FourCuts>> {
         return db.fourCutsDao().searchFourCuts(search)
     }

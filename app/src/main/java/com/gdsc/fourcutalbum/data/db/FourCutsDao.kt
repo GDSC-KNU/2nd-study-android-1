@@ -19,6 +19,9 @@ interface FourCutsDao {
     @Query("SELECT * FROM fourcuts")
     fun getFourCuts() : Flow<List<FourCuts>>
 
+    @Query("SELECT * FROM fourcuts WHERE id LIKE :id")
+    fun getFourCutsWithId(id: Int) : Flow<FourCuts>
+
     @Query("SELECT * FROM fourcuts WHERE friends LIKE :search " + "OR place LIKE :search")
     fun searchFourCuts(search: String): Flow<List<FourCuts>>
 

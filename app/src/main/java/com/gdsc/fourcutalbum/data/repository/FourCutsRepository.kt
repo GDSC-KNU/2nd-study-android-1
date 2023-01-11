@@ -14,5 +14,7 @@ interface FourCutsRepository {
 
     fun getFourCuts(): Flow<List<FourCuts>>
 
+    fun getFourCutsWithId(id: Int): Flow<FourCuts>
+
     fun searchFourCuts(search: String) : Flow<List<FourCuts>>
 }

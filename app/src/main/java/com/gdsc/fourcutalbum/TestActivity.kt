@@ -32,7 +32,7 @@ class TestActivity : AppCompatActivity() {
 
         val btn = findViewById<Button>(R.id.saveBtn)
 
-        val fourCuts = FourCuts("경주", Uri.EMPTY, listOf("수진", "은경"), "하루필름 황남점", "PROJECT")
+        val fourCuts = FourCuts("경주", Uri.EMPTY, arrayListOf("수진", "은경"), "하루필름 황남점", "PROJECT")
         btn.setOnClickListener {
             fourCutsViewModel.saveFourCuts(fourCuts)
             Log.d("database: ", "Insert Data")

@@ -3,6 +3,8 @@ package com.gdsc.fourcutalbum
 import android.Manifest
 import android.app.AlertDialog
 import android.content.Intent
+import android.content.Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
+import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -57,7 +59,7 @@ class EditActivity : AppCompatActivity() {
         fin.setOnClickListener {
             val chipList = makeChipList(group)
             val fourCuts =
-                FourCuts("경주", imageUri, chipList, loc.text.toString(), cont.text.toString())
+                FourCuts("경주", imageUri, chipList.toList(), loc.text.toString(), cont.text.toString())
             fourCutsViewModel.saveFourCuts(fourCuts)
             Log.d("database: ", "Insert Data")
         }
@@ -127,6 +129,9 @@ class EditActivity : AppCompatActivity() {
         } else {
             // 권한이 있는 경우 갤러리 실행
             val intent = Intent(Intent.ACTION_PICK)
+            // uri realpath 권한 이슈 해결
+            intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION)
+            intent.addFlags(FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
             // intent의 data와 type을 동시에 설정하는 메서드
             intent.setDataAndType(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,

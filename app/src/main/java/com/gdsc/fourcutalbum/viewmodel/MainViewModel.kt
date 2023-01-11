@@ -1,5 +1,6 @@
 package com.gdsc.fourcutalbum.viewmodel
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -44,6 +45,10 @@ class MainViewModel(
     // TestActivity의 lifecycle과 동기화
     val getFourCuts: StateFlow<List<FourCuts>> = fourCutsRepository.getFourCuts()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
+
+    fun getFourCutsWithId(id: Int): StateFlow<FourCuts> {
+        return fourCutsRepository.getFourCutsWithId(id).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), FourCuts("", Uri.EMPTY, listOf(),"",""))
+    }
 
     fun searchFourCuts(searchWord: String): StateFlow<List<FourCuts>> {
         return fourCutsRepository.searchFourCuts("%${searchWord}%").stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
