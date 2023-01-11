@@ -22,8 +22,11 @@
             app:cardCornerRadius="15dp">
 
             <androidx.appcompat.widget.SearchView
+                android:id="@+id/sv_main"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                app:iconifiedByDefault="false"
+                app:queryHint="장소 또는 친구 이름 검색"/>
         </androidx.cardview.widget.CardView>
 
 

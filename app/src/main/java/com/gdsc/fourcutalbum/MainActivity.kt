@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.gdsc.fourcutalbum.databinding.ActivityMainBinding
 import android.util.Log
 import android.widget.Button
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var fourCutsViewModel: FourCutsViewModel
     lateinit var mainViewModel: MainViewModel
-    var dataList : ArrayList<FourCuts> = arrayListOf()
+    var dataList: ArrayList<FourCuts> = arrayListOf()
     private var mainAdapter: MainSampleAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setInit()
-        setDatabase()
+        setAllData()
 
         // Room db test
 //        var intent : Intent = Intent(MainActivity@this, TestActivity::class.java)
@@ -52,24 +53,49 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun setInit(){ binding.btnEdit.setOnClickListener { startActivity(Intent(MainActivity@this, EditActivity::class.java)) } }
-
-    fun setDatabase(){
+    fun setInit() {
         val database = FourCutsDatabase.getInstance(this)
         val fourCutsRepository = FourCutsRepositoryImpl(database)
 
         val factory = MainViewModelProviderFactory(fourCutsRepository)
-        mainViewModel = ViewModelProvider(this,factory)[MainViewModel::class.java]
+        mainViewModel = ViewModelProvider(this, factory)[MainViewModel::class.java]
 
-        lifecycleScope.launch{
-            repeatOnLifecycle(Lifecycle.State.STARTED){
-                // get all
-//                mainViewModel.getFourCuts.collectLatest {
-//                    Log.d("room db get log", it.toString())
-//                    setRecyclerView(it)
-//                }
-                // if search
-                mainViewModel.searchFourCuts.collectLatest {
+        binding.btnEdit.setOnClickListener {
+            startActivity(
+                Intent(
+                    MainActivity@ this,
+                    EditActivity::class.java
+                )
+            )
+        }
+        binding.svMain.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // 검색 버튼 누를 때
+
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // 검색창에서 글자가 변경이 일어날 때마다 호출
+                newText?.let {
+                    if (it == "") {
+                        setAllData()
+                        Log.d("room db get log", "getall")
+                    } else {
+                        setSearchData(it)
+                        mainViewModel.searchWord.value?.let { it1 -> Log.d("QUERY", it1) }
+                    }
+                }
+                return true
+            }
+        })
+    }
+
+    fun setSearchData(searchWord: String) {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                mainViewModel.updateValue(searchWord)
+                mainViewModel.searchFourCuts(searchWord).collectLatest {
                     Log.d("room db get log", it.toString())
                     setRecyclerView(it)
                 }
@@ -77,7 +103,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun setRecyclerView(data: List<FourCuts>){
+    fun setAllData() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mainViewModel.getFourCuts.collectLatest {
+                    Log.d("room db get log", it.toString())
+                    setRecyclerView(it)
+                }
+            }
+        }
+    }
+
+    fun setRecyclerView(data: List<FourCuts>) {
         // init recyclerview
         mainAdapter = MainSampleAdapter()
 
@@ -89,6 +126,7 @@ class MainActivity : AppCompatActivity() {
             setHasFixedSize(true)
             layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
             adapter = mainAdapter
+            adapter?.notifyDataSetChanged()
         }
 
         mainAdapter!!.notifyDataSetChanged()

@@ -3,6 +3,7 @@ package com.gdsc.fourcutalbum.adapter
 import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
 import com.gdsc.fourcutalbum.R
 import com.gdsc.fourcutalbum.data.model.FourCuts
@@ -19,6 +20,7 @@ class MainSampleViewHolder(private var binding: ListItemMainBinding ) : Recycler
                 }else{
                     Glide.with(binding.root.context).load(it)
                         .override(SIZE_ORIGINAL)
+                        .apply(RequestOptions().override(600, 600))
                         .into(binding.ivItem)
                 }
             }catch(e:Exception){

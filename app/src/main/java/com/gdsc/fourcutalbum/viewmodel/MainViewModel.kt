@@ -1,11 +1,12 @@
 package com.gdsc.fourcutalbum.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gdsc.fourcutalbum.data.model.FourCuts
 import com.gdsc.fourcutalbum.data.repository.FourCutsRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -15,7 +16,21 @@ class MainViewModel(
     private val fourCutsRepository: FourCutsRepository,
 ) : ViewModel(){
 
-    val query: String = "%"+"동성로"+"%" // 가운데 검색내용
+    // 변경가능한 Mutable 타입의 LiveData
+    private val _searchWord = MutableLiveData<String>()
+
+    // 무결성을 위한 Getter
+    val searchWord : LiveData<String>
+        get() = _searchWord
+
+    // 초기값
+    init{ _searchWord.value = "" }
+
+    // Setter
+    fun updateValue(type : String){
+        _searchWord.value = type
+    }
+
 
     // Room
     fun saveFourCuts(fourCuts: FourCuts) = viewModelScope.launch(Dispatchers.IO){
@@ -30,7 +45,9 @@ class MainViewModel(
     val getFourCuts: StateFlow<List<FourCuts>> = fourCutsRepository.getFourCuts()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
 
-    val searchFourCuts: StateFlow<List<FourCuts>> = fourCutsRepository.searchFourCuts(query)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
+    fun searchFourCuts(searchWord: String): StateFlow<List<FourCuts>> {
+        return fourCutsRepository.searchFourCuts("%${searchWord}%").stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
+    }
+
 
 }
