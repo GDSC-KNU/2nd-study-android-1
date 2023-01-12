@@ -8,32 +8,33 @@
 
     <ImageButton
         android:id="@+id/back_ib"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/left"
         app:layout_constraintBottom_toTopOf="@+id/editImageView"
         app:layout_constraintEnd_toStartOf="@+id/title_tv"
         app:layout_constraintHorizontal_bias="0.098"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        android:background="@drawable/pen"/>
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/title_tv"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:text="제목"
         android:textSize="20dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center"/>
 
     <ImageButton
         android:id="@+id/edit_ib"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginBottom="13dp"
         android:background="@drawable/pen"
         app:layout_constraintBottom_toTopOf="@+id/editImageView"
@@ -62,19 +63,13 @@
         android:id="@+id/editLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/friend_tv">
 
-        <HorizontalScrollView
-            android:layout_weight="10"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/name_rv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/friends_chip"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent" />
-        </HorizontalScrollView>
+            android:layout_height="80dp"
+            tools:listitem="@layout/item_list"></androidx.recyclerview.widget.RecyclerView>
 
     </LinearLayout>
 
@@ -83,25 +78,30 @@
         android:id="@+id/location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="44dp"
         android:text="위치"
         app:layout_constraintTop_toBottomOf="@id/editLayout"
-        tools:layout_editor_absoluteX="0dp" />
+        tools:layout_editor_absoluteX="5dp" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/location_cv"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/comment_tv"
+        android:id="@+id/comment_cv"
+        android:layout_width="400dp"
+        android:layout_height="140dp"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.909"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location">
+        app:layout_constraintTop_toBottomOf="@+id/comment_tv"
+        app:layout_constraintVertical_bias="0.0">
+
         <TextView
-            android:id="@+id/location_tv"
+            android:id="@+id/comment_content_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="123"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:text="123323123" />
     </androidx.cardview.widget.CardView>
 
     <TextView
@@ -111,23 +111,26 @@
         android:layout_marginTop="72dp"
         android:text="코멘트"
         app:layout_constraintTop_toBottomOf="@id/location"
-        tools:layout_editor_absoluteX="0dp" />
+        tools:layout_editor_absoluteX="5dp" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/comment_cv"
-        android:layout_width="400dp"
-        android:layout_height="140dp"
-        android:elevation="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/location_cv"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        app:cardCornerRadius="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/comment_tv"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.54"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/comment_tv">
+        app:layout_constraintTop_toBottomOf="@+id/location"
+        app:layout_constraintVertical_bias="0.343">
+
         <TextView
-            android:id="@+id/comment_content_tv"
+            android:id="@+id/location_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="123323123"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:text="123" />
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
