@@ -11,31 +11,40 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.Gravity
-import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
 import com.gdsc.fourcutalbum.data.db.FourCutsDatabase
 import com.gdsc.fourcutalbum.data.model.FourCuts
 import com.gdsc.fourcutalbum.data.repository.FourCutsRepositoryImpl
+import com.gdsc.fourcutalbum.databinding.ActivityEditBinding
 import com.gdsc.fourcutalbum.viewmodel.FourCutsViewModel
 import com.gdsc.fourcutalbum.viewmodel.FourCutsViewModelProviderFactory
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class EditActivity : AppCompatActivity() {
+    private val binding: ActivityEditBinding by lazy {
+        ActivityEditBinding.inflate(layoutInflater)
+    }
+
     lateinit var fourCutsViewModel: FourCutsViewModel
     lateinit var imageUri: Uri
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit)
+        setContentView(binding.root)
 
         val database = FourCutsDatabase.getInstance(this)
         val fourCutsRepository = FourCutsRepositoryImpl(database)
@@ -43,25 +52,65 @@ class EditActivity : AppCompatActivity() {
         val factory = FourCutsViewModelProviderFactory(fourCutsRepository)
         fourCutsViewModel = ViewModelProvider(this, factory)[FourCutsViewModel::class.java]
 
-        val fin = findViewById<Button>(R.id.editSaveButton)
-        val btn = findViewById<ImageView>(R.id.editImageView)
-        val plusBtn = findViewById<Button>(R.id.editPlusBtn)
-        val group = findViewById<ChipGroup>(R.id.editFriendGroup)
-        val loc = findViewById<EditText>(R.id.editLocation)
-        val cont = findViewById<EditText>(R.id.editComment)
+        val id = intent.getIntExtra("detail_id", 0)
+        if(id>0) setData(id)
 
-        btn.setOnClickListener {
+        binding.editImageView.setOnClickListener {
             selectGallery()
         }
-        plusBtn.setOnClickListener {
-            makeDialog(group)
+        binding.editPlusBtn.setOnClickListener {
+            makeDialog(binding.editFriendGroup)
         }
-        fin.setOnClickListener {
-            val chipList = makeChipList(group)
+        binding.editSaveButton.setOnClickListener {
+            val chipList = makeChipList(binding.editFriendGroup)
             val fourCuts =
-                FourCuts("경주", imageUri, chipList.toList(), loc.text.toString(), cont.text.toString())
-            fourCutsViewModel.saveFourCuts(fourCuts)
-            Log.d("database: ", "Insert Data")
+                FourCuts(
+                    "경주",
+                    imageUri,
+                    chipList.toList(),
+                    binding.editLocation.text.toString(),
+                    binding.editComment.text.toString()
+                )
+            //Log.d("::::update chiplist", chipList.toString())
+            //Log.d("::: update image", fourCuts.photo.toString())
+            if(id>0) fourCutsViewModel.updateFourCuts(fourCuts.title, fourCuts.photo, fourCuts.friends, fourCuts.place, fourCuts.comment, id)
+            else fourCutsViewModel.saveFourCuts(fourCuts)
+            //Log.d("database: ", "Insert Data")
+
+            finish()
+        }
+
+    }
+
+    fun setData(id: Int) {
+        //Log.d(":::", "set data")
+        val fourCuts = fourCutsViewModel.getFourCutsWithId(id)
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                fourCuts.collectLatest {
+                    Log.d("TEST", it.toString())
+                    it.apply {
+                        //binding.titleTv.text = title
+                        binding.editLocation.setText(place)
+                        binding.editComment.setText(comment)
+                        for(x : String in friends!!) {
+                            binding.editFriendGroup.addView(Chip(this@EditActivity).apply {
+                                text = x
+                                isCloseIconVisible = true
+                                setOnCloseIconClickListener { binding.editFriendGroup.removeView(this) }
+                            })
+                        }
+
+                        Glide.with(binding.root.context).load(it.photo)
+                            .override(Target.SIZE_ORIGINAL)
+                            .into(binding.editImageView)
+
+                        imageUri = it.photo
+                        //Log.d(":::uri", imageUri.toString())
+                    }
+                }
+            }
         }
     }
 
@@ -121,10 +170,14 @@ class EditActivity : AppCompatActivity() {
             readPermission == PackageManager.PERMISSION_DENIED
         ) {
             // 권한 요청
-            ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE),
-                REQ_GALLERY)
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ),
+                REQ_GALLERY
+            )
 
         } else {
             // 권한이 있는 경우 갤러리 실행
@@ -154,13 +207,12 @@ class EditActivity : AppCompatActivity() {
                 imageUri = temp
             }
             imageUri?.let {
-
                 // 이미지를 불러온다
                 Glide.with(this)
                     .load(temp)
                     .fitCenter()
                     .apply(RequestOptions().override(500, 500))
-                    .into(findViewById(R.id.editImageView))
+                    .into(binding.editImageView)
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.gdsc.fourcutalbum.data.db
 
+import android.net.Uri
 import androidx.room.*
 import com.gdsc.fourcutalbum.data.model.FourCuts
 import kotlinx.coroutines.flow.Flow
@@ -13,8 +14,8 @@ interface FourCutsDao {
     @Delete
     suspend fun deleteFourCuts(fourCuts: FourCuts)
 
-    @Update
-    suspend fun updateFourCuts(fourCuts: FourCuts)
+    @Query("UPDATE fourcuts SET title = :title, photo = :photo, friends = :friends, place = :place, comment = :comment WHERE ID LIKE :id")
+    suspend fun updateFourCuts(title: String?, photo: Uri, friends: List<String>?, place: String?, comment: String?, id: Int)
 
     @Query("SELECT * FROM fourcuts")
     fun getFourCuts() : Flow<List<FourCuts>>

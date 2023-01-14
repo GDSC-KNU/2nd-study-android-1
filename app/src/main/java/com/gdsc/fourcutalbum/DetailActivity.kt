@@ -30,6 +30,7 @@ class DetailActivity: AppCompatActivity() {
     lateinit var recyclerView: RecyclerView
     lateinit var viewAdapter: DetailAdapter
     lateinit var viewManager: RecyclerView.LayoutManager
+    var postId: Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -40,6 +41,7 @@ class DetailActivity: AppCompatActivity() {
 
     fun setData(){
         val id = intent.getIntExtra("id",0)
+        postId = id
         val database = FourCutsDatabase.getInstance(this)
         val fourCutsRepository = FourCutsRepositoryImpl(database)
         val fourCuts = fourCutsRepository.getFourCutsWithId(id).stateIn(lifecycleScope, SharingStarted.WhileSubscribed(5000),
@@ -80,6 +82,8 @@ class DetailActivity: AppCompatActivity() {
 
         binding.editIb.setOnClickListener {
             val intent = Intent(this, EditActivity::class.java)
+            //Log.d("detail id:::", postId.toString())
+            intent.putExtra("detail_id", postId)
             startActivity(intent)
         }
 

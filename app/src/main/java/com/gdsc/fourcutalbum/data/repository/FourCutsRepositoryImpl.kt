@@ -1,5 +1,6 @@
 package com.gdsc.fourcutalbum.data.repository
 
+import android.net.Uri
 import com.gdsc.fourcutalbum.data.db.FourCutsDatabase
 import com.gdsc.fourcutalbum.data.model.FourCuts
 import kotlinx.coroutines.flow.Flow
@@ -15,8 +16,8 @@ class FourCutsRepositoryImpl(
         db.fourCutsDao().deleteFourCuts(fourCuts)
     }
 
-    override suspend fun updateFourCuts(fourCuts: FourCuts) {
-        db.fourCutsDao().updateFourCuts(fourCuts)
+    override suspend fun updateFourCuts(title: String?, photo: Uri, friends: List<String>?, place: String?, comment: String?, id: Int) {
+        db.fourCutsDao().updateFourCuts(title, photo, friends, place, comment, id)
     }
 
     override fun getFourCuts(): Flow<List<FourCuts>> {
