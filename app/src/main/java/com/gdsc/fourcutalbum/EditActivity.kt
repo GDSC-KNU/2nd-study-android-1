@@ -65,7 +65,7 @@ class EditActivity : AppCompatActivity() {
             val chipList = makeChipList(binding.editFriendGroup)
             val fourCuts =
                 FourCuts(
-                    "경주",
+                    binding.editTitle.text.toString(),
                     imageUri,
                     chipList.toList(),
                     binding.editLocation.text.toString(),
@@ -91,7 +91,7 @@ class EditActivity : AppCompatActivity() {
                 fourCuts.collectLatest {
                     Log.d("TEST", it.toString())
                     it.apply {
-                        //binding.titleTv.text = title
+                        binding.editTitle.setText(title)
                         binding.editLocation.setText(place)
                         binding.editComment.setText(comment)
                         for(x : String in friends!!) {
