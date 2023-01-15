@@ -5,17 +5,16 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     card_view:cardCornerRadius="20dp"
-    card_view:cardElevation="1dp"
+    card_view:cardElevation="2dp"
     card_view:cardBackgroundColor="#DDDDDD"
-    android:layout_margin="5dp">
+    android:layout_margin="5dp"
+    android:backgroundTint="@color/white">
     <TextView
         android:id="@+id/name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="이름"
-        android:textSize="16dp"
-        android:textStyle="bold"
         android:textColor="@color/black"
-        android:padding="15dp"/>
+        android:padding="10dp"/>
 
 </androidx.cardview.widget.CardView>
