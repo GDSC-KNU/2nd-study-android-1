@@ -1,9 +1,12 @@
 package com.gdsc.fourcutalbum
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.ContactsContract.CommonDataKinds.Im
 import android.util.Log
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -55,7 +58,7 @@ class DetailActivity: AppCompatActivity() {
                     it.apply {
                         binding.titleTv.text = title
                         binding.locationTv.text = place
-                        binding.commentContentTv.text = comment // TODO :: friend chip 구현 필요
+                        binding.commentContentTv.text = comment
                         viewAdapter = fourCuts.value.friends?.let { DetailAdapter(it) }!!
                         recyclerView = binding.nameRv.apply {
                             layoutManager = viewManager
@@ -64,7 +67,7 @@ class DetailActivity: AppCompatActivity() {
                         Glide.with(binding.root.context).load(it.photo)
                             .override(Target.SIZE_ORIGINAL)
                             .apply(RequestOptions().override(600, 600))
-                            .into(binding.editImageView)
+                            .into(binding.imageIv)
                     }
                 }
             }
@@ -87,27 +90,18 @@ class DetailActivity: AppCompatActivity() {
             startActivity(intent)
         }
 
-    }
-
-    // 이미지를 결과값으로 받는 변수
-    private val imageResult = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == RESULT_OK) {
-            // 이미지를 받으면 ImageView에 적용한다
-            val temp = result.data?.data
-            if (temp != null) {
-                imageUri = temp
-            }
-            imageUri?.let {
-
-                // 이미지를 불러온다
-                Glide.with(this)
-                    .load(temp)
-                    .fitCenter()
-                    .apply(RequestOptions().override(500, 500))
-                    .into(findViewById(R.id.editImageView))
-            }
+        binding.imageIv.setOnClickListener {
+            clickEvent(it)
         }
+
     }
+
+    private fun clickEvent(view: View) {
+        val intent = Intent(this, ImageActivity::class.java)
+        intent.putExtra("id", postId)
+        val opt = ActivityOptions.makeSceneTransitionAnimation(this, view, "imgTrans")
+        startActivity(intent, opt.toBundle())
+    }
+    // 이미지를 결과값으로 받는 변수
+
 }

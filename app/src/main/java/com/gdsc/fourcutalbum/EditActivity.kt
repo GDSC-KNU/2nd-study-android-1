@@ -55,7 +55,7 @@ class EditActivity : AppCompatActivity() {
         val id = intent.getIntExtra("detail_id", 0)
         if(id>0) setData(id)
 
-        binding.editImageView.setOnClickListener {
+        binding.imageIv.setOnClickListener {
             selectGallery()
         }
         binding.editPlusBtn.setOnClickListener {
@@ -104,7 +104,7 @@ class EditActivity : AppCompatActivity() {
 
                         Glide.with(binding.root.context).load(it.photo)
                             .override(Target.SIZE_ORIGINAL)
-                            .into(binding.editImageView)
+                            .into(binding.imageIv)
 
                         imageUri = it.photo
                         //Log.d(":::uri", imageUri.toString())
@@ -212,7 +212,7 @@ class EditActivity : AppCompatActivity() {
                     .load(temp)
                     .fitCenter()
                     .apply(RequestOptions().override(500, 500))
-                    .into(binding.editImageView)
+                    .into(binding.imageIv)
             }
         }
     }
