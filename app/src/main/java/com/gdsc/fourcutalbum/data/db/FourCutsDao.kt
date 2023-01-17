@@ -14,6 +14,9 @@ interface FourCutsDao {
     @Delete
     suspend fun deleteFourCuts(fourCuts: FourCuts)
 
+    @Query("DELETE FROM fourcuts WHERE id LIKE :id")
+    fun deleteFourCutsWithId(id: Int)
+
     @Query("UPDATE fourcuts SET title = :title, photo = :photo, friends = :friends, place = :place, comment = :comment WHERE ID LIKE :id")
     suspend fun updateFourCuts(title: String?, photo: Uri, friends: List<String>?, place: String?, comment: String?, id: Int)
 

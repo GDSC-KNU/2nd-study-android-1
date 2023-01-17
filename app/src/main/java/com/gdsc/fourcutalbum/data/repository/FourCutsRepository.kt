@@ -11,6 +11,9 @@ interface FourCutsRepository {
 
     suspend fun deleteFourCuts(fourCuts: FourCuts)
 
+    fun deleteFourCutsWithId(id: Int)
+
+
     suspend fun updateFourCuts(title: String?, photo: Uri, friends: List<String>?, place: String?, comment: String?, id: Int)
 
     fun getFourCuts(): Flow<List<FourCuts>>

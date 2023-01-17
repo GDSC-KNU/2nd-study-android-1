@@ -16,6 +16,10 @@ class FourCutsRepositoryImpl(
         db.fourCutsDao().deleteFourCuts(fourCuts)
     }
 
+    override fun deleteFourCutsWithId(id:Int) {
+        db.fourCutsDao().deleteFourCutsWithId(id)
+    }
+
     override suspend fun updateFourCuts(title: String?, photo: Uri, friends: List<String>?, place: String?, comment: String?, id: Int) {
         db.fourCutsDao().updateFourCuts(title, photo, friends, place, comment, id)
     }
