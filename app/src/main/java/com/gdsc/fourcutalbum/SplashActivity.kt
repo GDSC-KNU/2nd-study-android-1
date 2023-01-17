@@ -15,20 +15,24 @@ class SplashActivity : AppCompatActivity() {
         ActivitySplashBinding.inflate(layoutInflater)
     }
 
+    private var handler: Handler? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         findViewById<LinearLayout>(R.id.splash).setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
+            handler?.removeCallbacksAndMessages(null)
         }
         setInitialize()
     }
 
     private fun setInitialize() {
-        Handler(Looper.getMainLooper()).postDelayed({
+        handler = Handler(Looper.getMainLooper())
+        handler?.postDelayed({
             startActivity(Intent(this, MainActivity::class.java))
             finish()
-        }, 3500)
+        }, 1500)
     }
 }
