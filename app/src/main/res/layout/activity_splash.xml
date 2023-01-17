@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     android:background="@color/main_color"
     android:gravity="center"
-    android:orientation="vertical">
-
+    android:orientation="vertical"
+    android:id="@+id/splash">
 
     <TextView
         android:layout_width="match_parent"
@@ -17,4 +17,5 @@
         android:textSize="55dp"
         android:gravity="center"
         android:textColor="@color/white"/>
+
 </LinearLayout>
