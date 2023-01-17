@@ -13,9 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="인생\n네컷"
-        android:textStyle="bold"
-        android:textSize="55dp"
+        android:textSize="85dp"
         android:gravity="center"
+        android:fontFamily="@font/unpeople"
         android:textColor="@color/white"/>
 
 </LinearLayout>
