@@ -11,16 +11,16 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.Gravity
+import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
@@ -32,8 +32,7 @@ import com.gdsc.fourcutalbum.viewmodel.FourCutsViewModel
 import com.gdsc.fourcutalbum.viewmodel.FourCutsViewModelProviderFactory
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+
 
 class EditActivity : AppCompatActivity() {
     private val binding: ActivityEditBinding by lazy {
@@ -71,11 +70,9 @@ class EditActivity : AppCompatActivity() {
                     binding.editLocation.text.toString(),
                     binding.editComment.text.toString()
                 )
-            //Log.d("::::update chiplist", chipList.toString())
-            //Log.d("::: update image", fourCuts.photo.toString())
+
             if(id>0) fourCutsViewModel.updateFourCuts(fourCuts.title, fourCuts.photo, fourCuts.friends, fourCuts.place, fourCuts.comment, id)
             else fourCutsViewModel.saveFourCuts(fourCuts)
-            //Log.d("database: ", "Insert Data")
 
             finish()
         }
@@ -86,9 +83,8 @@ class EditActivity : AppCompatActivity() {
         //Log.d(":::", "set data")
         val fourCuts = fourCutsViewModel.getFourCutsWithId(id)
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                fourCuts.collectLatest {
+        lifecycleScope.launchWhenCreated {
+                fourCuts.collect {
                     Log.d("TEST", it.toString())
                     it.apply {
                         binding.editTitle.setText(title)
@@ -99,6 +95,13 @@ class EditActivity : AppCompatActivity() {
                                 text = x
                                 isCloseIconVisible = true
                                 setOnCloseIconClickListener { binding.editFriendGroup.removeView(this) }
+                                setCloseIconSize(30f)
+                                setCloseIconTintResource(R.color.main_color)
+                                chipStrokeWidth = 2.5f
+                                setTextAppearance(R.style.chipText)
+                                setChipMinHeight(100f)
+                                setChipBackgroundColorResource(R.color.white)
+                                setChipStrokeColorResource(R.color.gray)
                             })
                         }
 
@@ -112,7 +115,7 @@ class EditActivity : AppCompatActivity() {
                 }
             }
         }
-    }
+
 
     private fun makeChipList(group: ChipGroup): ArrayList<String> {
         val chipList = ArrayList<String>()
@@ -126,10 +129,20 @@ class EditActivity : AppCompatActivity() {
     private fun makeDialog(group: ChipGroup) {
         val et = EditText(this)
         et.gravity = Gravity.CENTER
+        val container = FrameLayout(this)
+        val params = FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        params.leftMargin = 100
+        params.rightMargin = 100
+        params.height = 200
+        et.layoutParams = params
+        container.addView(et)
         val builder = AlertDialog.Builder(this)
             .setTitle("친구 이름을 적어주세요")
-            .setView(et)
-            .setPositiveButton("확인") { dialog, which ->
+            .setView(container)
+            .setPositiveButton("추가") { dialog, which ->
                 val string = et.text
                 if (string.isNullOrEmpty()) {
                     Toast.makeText(this, "chip 이름을 입력해주세요", Toast.LENGTH_SHORT).show()
@@ -138,6 +151,13 @@ class EditActivity : AppCompatActivity() {
                         text = string
                         isCloseIconVisible = true
                         setOnCloseIconClickListener { group.removeView(this) }
+                        setCloseIconSize(30f)
+                        setCloseIconTintResource(R.color.main_color)
+                        chipStrokeWidth = 2.5f
+                        setTextAppearance(R.style.chipText)
+                        setChipMinHeight(100f)
+                        setChipBackgroundColorResource(R.color.white)
+                        setChipStrokeColorResource(R.color.gray)
                     })
                 }
             }

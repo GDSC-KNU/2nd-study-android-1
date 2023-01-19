@@ -81,6 +81,8 @@ class DetailActivity: AppCompatActivity() {
         binding.backIb.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+
+            finish()
         }
 
         binding.editIb.setOnClickListener {

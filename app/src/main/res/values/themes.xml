@@ -12,7 +12,10 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="android:textViewStyle">@style/customTextViewFontStyle</item>
+        <item name="android:buttonStyle">@style/customButtonFontStyle</item>
     </style>
+
     <style name="Theme.FourcutAlbum.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
