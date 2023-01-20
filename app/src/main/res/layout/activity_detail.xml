@@ -44,17 +44,18 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:textColor="@color/black"/>
 
         <ImageButton
             android:id="@+id/edit_ib"
-            android:layout_width="0dp"
+            android:layout_width="5dp"
             android:layout_height="25dp"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:background="@drawable/pen2"
-            android:scaleType="fitCenter"
             android:baselineAligned="false"
+            android:scaleType="fitCenter"
             app:layout_constraintBottom_toTopOf="@+id/imageIv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.969"
@@ -103,7 +104,9 @@
                 android:layout_height="wrap_content"
                 android:text="친구"
                 android:textFontWeight="900"
-                app:layout_constraintTop_toBottomOf="@id/imageIv" />
+                app:layout_constraintTop_toBottomOf="@id/imageIv"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/black"/>
 
             <LinearLayout
                 android:id="@+id/editLayout"
@@ -129,7 +132,8 @@
                 android:text="위치"
                 android:textFontWeight="900"
                 app:layout_constraintTop_toBottomOf="@id/editLayout"
-                tools:layout_editor_absoluteX="5dp" />
+                tools:layout_editor_absoluteX="5dp"
+                android:textColor="@color/black"/>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/location_cv"
@@ -163,7 +167,8 @@
                 android:text="코멘트"
                 android:textFontWeight="900"
                 app:layout_constraintTop_toBottomOf="@id/location_cv"
-                tools:layout_editor_absoluteX="5dp" />
+                tools:layout_editor_absoluteX="5dp"
+                android:textColor="@color/black"/>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/comment_cv"
