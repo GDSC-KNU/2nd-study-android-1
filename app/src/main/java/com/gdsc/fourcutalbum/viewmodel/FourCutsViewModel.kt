@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.gdsc.fourcutalbum.data.model.FourCuts
 import com.gdsc.fourcutalbum.data.repository.FourCutsRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -35,5 +36,9 @@ class FourCutsViewModel(
 
     fun getFourCutsWithId(id: Int): StateFlow<FourCuts> {
         return fourCutsRepository.getFourCutsWithId(id).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), FourCuts("", Uri.EMPTY, listOf(),"",""))
+    }
+
+    fun getFourCutsWithID(id: Int) : Flow<FourCuts> {
+        return fourCutsRepository.getFourCutsWithId(id)
     }
 }

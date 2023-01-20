@@ -37,7 +37,7 @@ import com.gdsc.fourcutalbum.viewmodel.FourCutsViewModel
 import com.gdsc.fourcutalbum.viewmodel.FourCutsViewModelProviderFactory
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-
+import kotlinx.coroutines.flow.collectLatest
 
 class EditActivity : AppCompatActivity() {
     private val binding: ActivityEditBinding by lazy {
@@ -86,41 +86,32 @@ class EditActivity : AppCompatActivity() {
 
     fun setData(id: Int) {
         //Log.d(":::", "set data")
-        val fourCuts = fourCutsViewModel.getFourCutsWithId(id)
+        // val fourCuts = fourCutsViewModel.getFourCutsWithId(id)
+        val fourCuts = fourCutsViewModel.getFourCutsWithID(id)
 
         lifecycleScope.launchWhenCreated {
-                fourCuts.collect {
-                    Log.d("TEST", it.toString())
+                fourCuts.collectLatest {
+                    Log.d("EDIT_TEST", it.toString())
                     it.apply {
                         binding.editTitle.setText(title)
                         binding.editLocation.setText(place)
                         binding.editComment.setText(comment)
-                        for(x : String in friends!!) {
-                            binding.editFriendGroup.addView(Chip(this@EditActivity).apply {
-                                text = x
-                                isCloseIconVisible = true
-                                setOnCloseIconClickListener { binding.editFriendGroup.removeView(this) }
-                                setCloseIconSize(30f)
-                                setCloseIconTintResource(R.color.main_color)
-                                chipStrokeWidth = 2.5f
-                                setTextAppearance(R.style.chipText)
-                                setChipMinHeight(100f)
-                                setChipBackgroundColorResource(R.color.white)
-                                setChipStrokeColorResource(R.color.gray)
-                            })
+                        // setting
+                        val cnt = binding.editFriendGroup.childCount
+                        for(i : Int in 1.. cnt){ // clear
+                            binding.editFriendGroup.removeView(binding.editFriendGroup.getChildAt(0) as Chip)
                         }
+                        for(friend : String in friends!!) binding.editFriendGroup.addView(makeChip(friend))
 
                         Glide.with(binding.root.context).load(it.photo)
                             .override(Target.SIZE_ORIGINAL)
                             .into(binding.imageIv)
 
                         imageUri = it.photo
-                        //Log.d(":::uri", imageUri.toString())
                     }
                 }
             }
         }
-
 
     private fun makeChipList(group: ChipGroup): ArrayList<String> {
         val chipList = ArrayList<String>()
@@ -129,6 +120,23 @@ class EditActivity : AppCompatActivity() {
             chipList.add(chip.text.toString())
         }
         return chipList
+    }
+
+    private fun makeChip(str: String): Chip {
+        val chip = Chip(this)
+        chip.apply {
+            text = str
+            isCloseIconVisible = true
+            setOnCloseIconClickListener { binding.editFriendGroup.removeView(this) }
+            setCloseIconSize(30f)
+            setCloseIconTintResource(R.color.main_color)
+            chipStrokeWidth = 2.5f
+            setTextAppearance(R.style.chipText)
+            setChipMinHeight(100f)
+            setChipBackgroundColorResource(R.color.white)
+            setChipStrokeColorResource(R.color.gray)
+        }
+        return chip
     }
 
     private fun makeDialog(group: ChipGroup) {
@@ -148,22 +156,11 @@ class EditActivity : AppCompatActivity() {
             .setTitle("친구 이름을 적어주세요")
             .setView(container)
             .setPositiveButton("추가") { dialog, which ->
-                val string = et.text
-                if (string.isNullOrEmpty()) {
+                val string = et.text.toString()
+                if (string.isEmpty()) {
                     Toast.makeText(this, "chip 이름을 입력해주세요", Toast.LENGTH_SHORT).show()
                 } else {
-                    group.addView(Chip(this).apply {
-                        text = string
-                        isCloseIconVisible = true
-                        setOnCloseIconClickListener { group.removeView(this) }
-                        setCloseIconSize(30f)
-                        setCloseIconTintResource(R.color.main_color)
-                        chipStrokeWidth = 2.5f
-                        setTextAppearance(R.style.chipText)
-                        setChipMinHeight(100f)
-                        setChipBackgroundColorResource(R.color.white)
-                        setChipStrokeColorResource(R.color.gray)
-                    })
+                    group.addView(makeChip(string))
                 }
             }
             .setNegativeButton("취소") { dialog, which ->

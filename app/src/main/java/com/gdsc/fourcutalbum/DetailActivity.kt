@@ -10,6 +10,7 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,6 +23,8 @@ import com.gdsc.fourcutalbum.data.db.FourCutsDatabase
 import com.gdsc.fourcutalbum.data.model.FourCuts
 import com.gdsc.fourcutalbum.data.repository.FourCutsRepositoryImpl
 import com.gdsc.fourcutalbum.databinding.ActivityDetailBinding
+import com.gdsc.fourcutalbum.viewmodel.FourCutsViewModel
+import com.gdsc.fourcutalbum.viewmodel.FourCutsViewModelProviderFactory
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
@@ -33,6 +36,7 @@ class DetailActivity: AppCompatActivity() {
     lateinit var recyclerView: RecyclerView
     lateinit var viewAdapter: DetailAdapter
     lateinit var viewManager: RecyclerView.LayoutManager
+    lateinit var fourCutsViewModel: FourCutsViewModel
     var postId: Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +51,9 @@ class DetailActivity: AppCompatActivity() {
         postId = id
         val database = FourCutsDatabase.getInstance(this)
         val fourCutsRepository = FourCutsRepositoryImpl(database)
-        val fourCuts = fourCutsRepository.getFourCutsWithId(id).stateIn(lifecycleScope, SharingStarted.WhileSubscribed(5000),
-            FourCuts("", Uri.EMPTY, listOf(),"",""))
+        val factory = FourCutsViewModelProviderFactory(fourCutsRepository)
+        fourCutsViewModel = ViewModelProvider(this, factory)[FourCutsViewModel::class.java]
+        val fourCuts = fourCutsViewModel.getFourCutsWithId(id)
         viewManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
         lifecycleScope.launch {
