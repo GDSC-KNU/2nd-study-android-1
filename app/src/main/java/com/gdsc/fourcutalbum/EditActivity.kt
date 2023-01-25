@@ -9,6 +9,8 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.InputFilter
+import android.text.InputType
 import android.util.Log
 import android.view.Gravity
 import android.widget.EditText
@@ -32,6 +34,7 @@ import com.gdsc.fourcutalbum.viewmodel.FourCutsViewModel
 import com.gdsc.fourcutalbum.viewmodel.FourCutsViewModelProviderFactory
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -41,7 +44,7 @@ class EditActivity : AppCompatActivity() {
     }
 
     lateinit var fourCutsViewModel: FourCutsViewModel
-    lateinit var imageUri: Uri
+    private var imageUri: Uri = Uri.EMPTY
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -53,7 +56,7 @@ class EditActivity : AppCompatActivity() {
         fourCutsViewModel = ViewModelProvider(this, factory)[FourCutsViewModel::class.java]
 
         val id = intent.getIntExtra("detail_id", 0)
-        if(id>0) setData(id)
+        if (id > 0) setData(id)
 
         binding.imageIv.setOnClickListener {
             selectGallery()
@@ -63,21 +66,26 @@ class EditActivity : AppCompatActivity() {
         }
         binding.editSaveButton.setOnClickListener {
             val chipList = makeChipList(binding.editFriendGroup)
-            val fourCuts =
-                FourCuts(
-                    binding.editTitle.text.toString(),
-                    imageUri,
-                    chipList.toList(),
-                    binding.editLocation.text.toString(),
-                    binding.editComment.text.toString()
-                )
-            //Log.d("::::update chiplist", chipList.toString())
-            //Log.d("::: update image", fourCuts.photo.toString())
-            if(id>0) fourCutsViewModel.updateFourCuts(fourCuts.title, fourCuts.photo, fourCuts.friends, fourCuts.place, fourCuts.comment, id)
-            else fourCutsViewModel.saveFourCuts(fourCuts)
-            //Log.d("database: ", "Insert Data")
-
-            finish()
+            if (binding.editTitle.text == null || imageUri == Uri.EMPTY || chipList.size == 0 || binding.editLocation.text == null || binding.editComment.text == null)
+                Snackbar.make(it, "입력이 잘못되었습니다.", Snackbar.LENGTH_SHORT).show()
+            else {
+                val fourCuts =
+                    FourCuts(
+                        binding.editTitle.text.toString(),
+                        imageUri,
+                        chipList.toList(),
+                        binding.editLocation.text.toString(),
+                        binding.editComment.text.toString()
+                    )
+                if (id > 0) fourCutsViewModel.updateFourCuts(fourCuts.title,
+                    fourCuts.photo,
+                    fourCuts.friends,
+                    fourCuts.place,
+                    fourCuts.comment,
+                    id)
+                else fourCutsViewModel.saveFourCuts(fourCuts)
+                finish()
+            }
         }
 
     }
@@ -94,11 +102,13 @@ class EditActivity : AppCompatActivity() {
                         binding.editTitle.setText(title)
                         binding.editLocation.setText(place)
                         binding.editComment.setText(comment)
-                        for(x : String in friends!!) {
+                        for (x: String in friends!!) {
                             binding.editFriendGroup.addView(Chip(this@EditActivity).apply {
                                 text = x
                                 isCloseIconVisible = true
-                                setOnCloseIconClickListener { binding.editFriendGroup.removeView(this) }
+                                setOnCloseIconClickListener {
+                                    binding.editFriendGroup.removeView(this)
+                                }
                             })
                         }
 
@@ -125,6 +135,9 @@ class EditActivity : AppCompatActivity() {
 
     private fun makeDialog(group: ChipGroup) {
         val et = EditText(this)
+        et.maxLines = 1
+        et.inputType = InputType.TYPE_CLASS_TEXT
+        et.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(20))
         et.gravity = Gravity.CENTER
         val builder = AlertDialog.Builder(this)
             .setTitle("친구 이름을 적어주세요")
@@ -145,6 +158,7 @@ class EditActivity : AppCompatActivity() {
             }
         builder.show()
     }
+
 
     companion object {
         const val REVIEW_MIN_LENGTH = 10
