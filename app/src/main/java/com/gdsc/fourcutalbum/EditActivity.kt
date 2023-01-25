@@ -107,172 +107,171 @@ class EditActivity : AppCompatActivity() {
                     binding.editLocation.setText(place)
                     binding.editComment.setText(comment)
 
-                        // setting
-                        val cnt = binding.editFriendGroup.childCount
-                        for (i: Int in 1..cnt) { // clear
-                            binding.editFriendGroup.removeView(binding.editFriendGroup.getChildAt(0) as Chip)
+                    // setting
+                    val cnt = binding.editFriendGroup.childCount
+                    for (i: Int in 1..cnt) { // clear
+                        binding.editFriendGroup.removeView(binding.editFriendGroup.getChildAt(0) as Chip)
 
-                        }
-                        for (friend: String in friends!!) binding.editFriendGroup.addView(makeChip(
-                            friend))
-
-                        Glide.with(binding.root.context).load(it.photo)
-                            .override(Target.SIZE_ORIGINAL)
-                            .into(binding.imageIv)
-
-                        imageUri = it.photo
                     }
-                }
-            }
-        }
+                    for (friend: String in friends!!) binding.editFriendGroup.addView(makeChip(
+                        friend))
 
-        private fun makeChipList(group: ChipGroup): ArrayList<String> {
-            val chipList = ArrayList<String>()
-            for (i: Int in 1..group.childCount) {
-                val chip: Chip = group.getChildAt(i - 1) as Chip
-                chipList.add(chip.text.toString())
-            }
-            return chipList
-        }
-
-        private fun makeChip(str: String): Chip {
-            val chip = Chip(this)
-            chip.apply {
-                text = str
-                isCloseIconVisible = true
-                setOnCloseIconClickListener { binding.editFriendGroup.removeView(this) }
-                setCloseIconSize(30f)
-                setCloseIconTintResource(R.color.main_color)
-                chipStrokeWidth = 2.5f
-                setTextAppearance(R.style.chipText)
-                setChipMinHeight(100f)
-                setChipBackgroundColorResource(R.color.white)
-                setChipStrokeColorResource(R.color.gray)
-            }
-            return chip
-        }
-
-        private fun makeDialog(group: ChipGroup) {
-            val et = EditText(this)
-            et.maxLines = 1
-            et.inputType = InputType.TYPE_CLASS_TEXT
-            et.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(20))
-            et.gravity = Gravity.CENTER
-            val container = FrameLayout(this)
-            val params = FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-            params.leftMargin = 100
-            params.rightMargin = 100
-            params.height = 200
-            et.layoutParams = params
-            container.addView(et)
-            val builder = AlertDialog.Builder(this)
-                .setTitle("친구 이름을 적어주세요")
-                .setView(container)
-                .setPositiveButton("추가") { dialog, which ->
-                    val string = et.text.toString()
-                    if (string.isEmpty()) {
-                        Toast.makeText(this, "chip 이름을 입력해주세요", Toast.LENGTH_SHORT).show()
-                    } else {
-                        group.addView(makeChip(string))
-                    }
-                }
-                .setNegativeButton("취소") { dialog, which ->
-                }
-            builder.show()
-
-        }
-
-
-        companion object {
-            const val REVIEW_MIN_LENGTH = 10
-
-            // 갤러리 권한 요청
-            const val REQ_GALLERY = 1
-
-            // API 호출시 Parameter key값
-            const val PARAM_KEY_IMAGE = "image"
-            const val PARAM_KEY_PRODUCT_ID = "product_id"
-            const val PARAM_KEY_REVIEW = "review_content"
-            const val PARAM_KEY_RATING = "rating"
-        }
-
-        private fun selectGallery() {
-            val writePermission =
-                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            val readPermission =
-                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-
-            //권한 확인
-            if (writePermission == PackageManager.PERMISSION_DENIED ||
-                readPermission == PackageManager.PERMISSION_DENIED
-            ) {
-                // 권한 요청
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE
-                    ),
-                    REQ_GALLERY
-                )
-
-            } else {
-                // 권한이 있는 경우 갤러리 실행
-                val intent = Intent(Intent.ACTION_PICK)
-                // uri realpath 권한 이슈 해결
-                intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION)
-                intent.addFlags(FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
-                // intent의 data와 type을 동시에 설정하는 메서드
-                intent.setDataAndType(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    "image/*"
-                )
-
-                imageResult.launch(intent)
-            }
-        }
-
-
-        // 이미지를 결과값으로 받는 변수
-        private val imageResult = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-            if (result.resultCode == RESULT_OK) {
-                // 이미지를 받으면 ImageView에 적용한다
-                val temp = result.data?.data
-                if (temp != null) {
-                    imageUri = temp
-                }
-                imageUri?.let {
-                    // 이미지를 불러온다
-                    Glide.with(this)
-                        .load(temp)
-                        .fitCenter()
-                        .apply(RequestOptions().override(500, 500))
+                    Glide.with(binding.root.context).load(it.photo)
+                        .override(Target.SIZE_ORIGINAL)
                         .into(binding.imageIv)
-                }
-            }
-        }
 
-        // 키보드 바깥을 누르면 키보드를 숨김
-        override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-            val focusView: View? = currentFocus
-            if (focusView != null) {
-                val rect = Rect()
-                focusView.getGlobalVisibleRect(rect)
-                val x = ev.x.toInt()
-                val y = ev.y.toInt()
-                if (!rect.contains(x, y)) {
-                    val imm: InputMethodManager =
-                        getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(focusView.windowToken, 0)
-                    focusView.clearFocus()
+                    imageUri = it.photo
                 }
             }
-            return super.dispatchTouchEvent(ev)
         }
+    }
+
+    private fun makeChipList(group: ChipGroup): ArrayList<String> {
+        val chipList = ArrayList<String>()
+        for (i: Int in 1..group.childCount) {
+            val chip: Chip = group.getChildAt(i - 1) as Chip
+            chipList.add(chip.text.toString())
+        }
+        return chipList
+    }
+
+    private fun makeChip(str: String): Chip {
+        val chip = Chip(this)
+        chip.apply {
+            text = str
+            isCloseIconVisible = true
+            setOnCloseIconClickListener { binding.editFriendGroup.removeView(this) }
+            setCloseIconSize(30f)
+            setCloseIconTintResource(R.color.main_color)
+            chipStrokeWidth = 2.5f
+            setTextAppearance(R.style.chipText)
+            setChipMinHeight(100f)
+            setChipBackgroundColorResource(R.color.white)
+            setChipStrokeColorResource(R.color.gray)
+        }
+        return chip
+    }
+
+    private fun makeDialog(group: ChipGroup) {
+        val et = EditText(this)
+        et.maxLines = 1
+        et.inputType = InputType.TYPE_CLASS_TEXT
+        et.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(20))
+        et.gravity = Gravity.CENTER
+        val container = FrameLayout(this)
+        val params = FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        params.leftMargin = 100
+        params.rightMargin = 100
+        params.height = 200
+        et.layoutParams = params
+        container.addView(et)
+        val builder = AlertDialog.Builder(this)
+            .setTitle("친구 이름을 적어주세요")
+            .setView(container)
+            .setPositiveButton("추가") { dialog, which ->
+                val string = et.text.toString()
+                if (string.isEmpty()) {
+                    Toast.makeText(this, "chip 이름을 입력해주세요", Toast.LENGTH_SHORT).show()
+                } else {
+                    group.addView(makeChip(string))
+                }
+            }
+            .setNegativeButton("취소") { dialog, which ->
+            }
+        builder.show()
+
+    }
+
+
+    companion object {
+        const val REVIEW_MIN_LENGTH = 10
+
+        // 갤러리 권한 요청
+        const val REQ_GALLERY = 1
+
+        // API 호출시 Parameter key값
+        const val PARAM_KEY_IMAGE = "image"
+        const val PARAM_KEY_PRODUCT_ID = "product_id"
+        const val PARAM_KEY_REVIEW = "review_content"
+        const val PARAM_KEY_RATING = "rating"
+    }
+
+    private fun selectGallery() {
+        val writePermission =
+            ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        val readPermission =
+            ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+
+        //권한 확인
+        if (writePermission == PackageManager.PERMISSION_DENIED ||
+            readPermission == PackageManager.PERMISSION_DENIED
+        ) {
+            // 권한 요청
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ),
+                REQ_GALLERY
+            )
+
+        } else {
+            // 권한이 있는 경우 갤러리 실행
+            val intent = Intent(Intent.ACTION_PICK)
+            // uri realpath 권한 이슈 해결
+            intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION)
+            intent.addFlags(FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
+            // intent의 data와 type을 동시에 설정하는 메서드
+            intent.setDataAndType(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                "image/*"
+            )
+
+            imageResult.launch(intent)
+        }
+    }
+
+
+    // 이미지를 결과값으로 받는 변수
+    private val imageResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            // 이미지를 받으면 ImageView에 적용한다
+            val temp = result.data?.data
+            if (temp != null) {
+                imageUri = temp
+            }
+            imageUri?.let {
+                // 이미지를 불러온다
+                Glide.with(this)
+                    .load(temp)
+                    .fitCenter()
+                    .apply(RequestOptions().override(500, 500))
+                    .into(binding.imageIv)
+            }
+        }
+    }
+
+    // 키보드 바깥을 누르면 키보드를 숨김
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        val focusView: View? = currentFocus
+        if (focusView != null) {
+            val rect = Rect()
+            focusView.getGlobalVisibleRect(rect)
+            val x = ev.x.toInt()
+            val y = ev.y.toInt()
+            if (!rect.contains(x, y)) {
+                val imm: InputMethodManager =
+                    getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(focusView.windowToken, 0)
+                focusView.clearFocus()
+            }
+        }
+        return super.dispatchTouchEvent(ev)
     }
 }
