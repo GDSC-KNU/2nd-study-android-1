@@ -84,15 +84,13 @@ class DetailActivity: AppCompatActivity() {
         setContentView(binding.root)
 
         binding.backIb.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-
+//            val intent = Intent(this, MainActivity::class.java)
+//            startActivity(intent)
             finish()
         }
 
         binding.editIb.setOnClickListener {
             val intent = Intent(this, EditActivity::class.java)
-            //Log.d("detail id:::", postId.toString())
             intent.putExtra("detail_id", postId)
             startActivity(intent)
         }

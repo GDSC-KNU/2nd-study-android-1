@@ -3,6 +3,7 @@ package com.gdsc.fourcutalbum
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import com.gdsc.fourcutalbum.databinding.ActivityMainBinding
@@ -39,6 +40,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var mainViewModel: MainViewModel
     var dataList: ArrayList<FourCuts> = arrayListOf()
     private var mainAdapter: MainSampleAdapter? = null
+    private var recyclerViewState: Parcelable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +60,20 @@ class MainActivity : AppCompatActivity() {
         Log.d("TEST","START")
     }
 
+
+    // onResume() 에서 저장해둔 리사이클러뷰 상태를 다시 set
+    override fun onResume() {
+        super.onResume()
+        if (recyclerViewState != null) {
+            binding.rvMain.layoutManager?.onRestoreInstanceState(recyclerViewState)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // LayoutManager를 불러와 Parcelable 변수에 리사이클러뷰 상태를 Bundle 형태로 저장한다
+        recyclerViewState = binding.rvMain.layoutManager?.onSaveInstanceState()
+    }
 
     fun setInit() {
         val database = FourCutsDatabase.getInstance(this)

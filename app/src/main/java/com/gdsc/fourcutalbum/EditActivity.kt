@@ -69,8 +69,8 @@ class EditActivity : AppCompatActivity() {
         }
         binding.editSaveButton.setOnClickListener {
             val chipList = makeChipList(binding.editFriendGroup)
-            if (binding.editTitle.text == null || imageUri == Uri.EMPTY || chipList.size == 0 || binding.editLocation.text == null || binding.editComment.text == null)
-                Snackbar.make(it, "입력이 잘못되었습니다.", Snackbar.LENGTH_SHORT).show()
+            if (imageUri == Uri.EMPTY)
+                Snackbar.make(it, "사진을 등록해주세요!", Snackbar.LENGTH_SHORT).show()
             else {
                 val fourCuts =
                     FourCuts(
@@ -119,7 +119,7 @@ class EditActivity : AppCompatActivity() {
                     Glide.with(binding.root.context).load(it.photo)
                         .override(Target.SIZE_ORIGINAL)
                         .into(binding.imageIv)
-
+                    binding.imageIv.background = null
                     imageUri = it.photo
                 }
             }
@@ -254,6 +254,7 @@ class EditActivity : AppCompatActivity() {
                     .apply(RequestOptions().override(500, 500))
                     .into(binding.imageIv)
             }
+            binding.imageIv.background = null
         }
     }
 
