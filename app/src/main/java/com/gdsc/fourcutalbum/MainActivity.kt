@@ -53,6 +53,12 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.d("TEST","START")
+    }
+
+
     fun setInit() {
         val database = FourCutsDatabase.getInstance(this)
         val fourCutsRepository = FourCutsRepositoryImpl(database)
@@ -68,6 +74,7 @@ class MainActivity : AppCompatActivity() {
                 )
             )
         }
+
         binding.svMain.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 // 검색 버튼 누를 때
@@ -93,10 +100,10 @@ class MainActivity : AppCompatActivity() {
 
     fun setSearchData(searchWord: String) {
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
 //                mainViewModel.updateValue(searchWord)
                 mainViewModel.searchFourCuts(searchWord).collectLatest {
-                    Log.d("room db get log", it.toString())
+                    Log.d("room db get log1", it.toString())
                     setRecyclerView(it)
                 }
             }
@@ -105,9 +112,9 @@ class MainActivity : AppCompatActivity() {
 
     fun setAllData() {
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
                 mainViewModel.getFourCuts.collectLatest {
-                    Log.d("room db get log", it.toString())
+                    Log.d("room db get log2", it.toString())
                     setRecyclerView(it)
                 }
             }
