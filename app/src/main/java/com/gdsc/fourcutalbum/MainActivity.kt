@@ -1,6 +1,7 @@
 package com.gdsc.fourcutalbum
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
@@ -9,7 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.gdsc.fourcutalbum.databinding.ActivityMainBinding
 import android.util.Log
 import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -75,6 +79,7 @@ class MainActivity : AppCompatActivity() {
         recyclerViewState = binding.rvMain.layoutManager?.onSaveInstanceState()
     }
 
+
     fun setInit() {
         val database = FourCutsDatabase.getInstance(this)
         val fourCutsRepository = FourCutsRepositoryImpl(database)
@@ -90,6 +95,7 @@ class MainActivity : AppCompatActivity() {
                 )
             )
         }
+
 
         binding.svMain.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {

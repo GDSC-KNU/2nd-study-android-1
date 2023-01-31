@@ -16,6 +16,10 @@
         <item name="android:buttonStyle">@style/customButtonFontStyle</item>
     </style>
 
+    <style name="AppSearchView" parent="Widget.AppCompat.SearchView">
+        <item name="android:fontFamily">@font/soojin</item>
+    </style>
+
     <style name="Theme.FourcutAlbum.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
